@@ -1,4 +1,4 @@
-## Unreleased
+## 1.0.5 (05 May 2026)
 
 - Skip griffe step if there is no reference generation in play.
 - Cache HTML→Markdown conversion in post-render to skip the per-page `quarto pandoc` subprocess when content is unchanged.                                    
