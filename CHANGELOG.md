@@ -1,3 +1,8 @@
+## 1.0.6 (20 May 2026)
+
+- Emit `<link rel="alternate" type="text/markdown">` head tags pointing to `/llms.txt`, `/llms-full.txt`, and `/llms-guide.txt` on every page so coding agents can discover the LLM-readable docs from any URL.
+- `llms.txt`, `llms-full.txt`, and `llms-guide.txt` now also include top-level pages reachable from `website.navbar` (e.g. listing pages on a separate tab) that aren't already covered by `inspect-docs.navigation` or `reference/`.
+
 ## 1.0.5 (05 May 2026)
 
 - Skip griffe step if there is no reference generation in play.
