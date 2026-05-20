@@ -1,3 +1,7 @@
+## 1.0.7 (20 May 2026)
+
+- Pre-render no longer overwrites an existing `.gitignore`. Projects can now add their own patterns alongside the inspect-docs defaults without having them stomped on every render. A `.gitignore` is still written when the file is missing.
+
 ## 1.0.6 (20 May 2026)
 
 - Emit `<link rel="alternate" type="text/markdown">` head tags pointing to `/llms.txt`, `/llms-full.txt`, and `/llms-guide.txt` on every page so coding agents can discover the LLM-readable docs from any URL.
