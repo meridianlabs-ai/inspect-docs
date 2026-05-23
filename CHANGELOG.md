@@ -1,6 +1,9 @@
 ## 1.0.7 (20 May 2026)
 
 - Pre-render no longer overwrites an existing `.gitignore`. Projects can now add their own patterns alongside the inspect-docs defaults without having them stomped on every render. A `.gitignore` is still written when the file is missing.
+- Auto-detected "simple reference" mode: when `reference/` contains exactly one user-authored `index.qmd` (with a `reference:` frontmatter field), the extension skips index auto-generation and the Python API / CLI wrapper sections, folding a flat Reference link into the main sidebar.
+- Never overwrite a user-authored `reference/index.qmd` (one with a `reference:` field) with the auto-generated landing page.
+- Auto-discover the project module name in `post-render.py` (matching `pre-render.py`) so the llms.txt Reference section appears without requiring an explicit `inspect-docs.module` setting.
 
 ## 1.0.6 (20 May 2026)
 
@@ -9,6 +12,9 @@
 
 ## 1.0.5 (05 May 2026)
 
+- Auto-detected "simple reference" mode: when `reference/` contains exactly one user-authored `index.qmd` (with a `reference:` frontmatter field), the extension skips index auto-generation and the Python API / CLI wrapper sections, folding a flat Reference link into the main sidebar.
+- Never overwrite a user-authored `reference/index.qmd` (one with a `reference:` field) with the auto-generated landing page.
+- Auto-discover the project module name in `post-render.py` (matching `pre-render.py`) so the llms.txt Reference section appears without requiring an explicit `inspect-docs.module` setting.
 - Skip griffe step if there is no reference generation in play.
 - Cache HTML→Markdown conversion in post-render to skip the per-page `quarto pandoc` subprocess when content is unchanged.                                    
 - Cache reference frontmatter and symbol scan in pre-render so unchanged `reference/*.qmd` files are not re-read on every render.                         

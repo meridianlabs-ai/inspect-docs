@@ -10,11 +10,16 @@ import hashlib
 import os
 import re
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 from typing import Any
 
 import yaml
+
+# import shared discovery helpers from extension root (this file's directory)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _discover import discover_module_name  # noqa: E402
 
 YamlDict = dict[str, Any]
 
@@ -173,7 +178,7 @@ def generate_llms_txt(output_dir: Path, opts: YamlDict, navbar: YamlDict) -> Non
     title: str = opts.get("title", "") or extract_h1(Path("index.qmd")) or ""
     description: str = opts.get("description", "")
     base_url: str = opts.get("url", "").rstrip("/")
-    module_name: str | None = opts.get("module")
+    module_name: str | None = opts.get("module") or discover_module_name()
     navigation: list[YamlDict] = opts.get("navigation", [])
 
     lines: list[str] = []
@@ -293,18 +298,22 @@ def format_reference_section(module_name: str, base_url: str) -> list[str]:
 
     entries: list[str] = []
     for qmd in sorted(ref_dir.glob("*.qmd")):
-        if qmd.stem == "index":
+        frontmatter = read_frontmatter(qmd) or {}
+        is_user_index = qmd.stem == "index" and bool(frontmatter.get("reference"))
+
+        if qmd.stem == "index" and not is_user_index:
+            # Auto-generated landing page — skip.
             continue
 
-        stem = qmd.stem
-        is_api = stem == module_name or stem.startswith(f"{module_name}.")
-        is_cli = stem.startswith(f"{module_name}_")
-        if not is_api and not is_cli:
-            continue
+        if not is_user_index:
+            stem = qmd.stem
+            is_api = stem == module_name or stem.startswith(f"{module_name}.")
+            is_cli = stem.startswith(f"{module_name}_")
+            if not is_api and not is_cli:
+                continue
 
-        frontmatter = read_frontmatter(qmd)
-        title = frontmatter.get("title", stem) if frontmatter else stem
-        description = frontmatter.get("description", "") if frontmatter else ""
+        title = frontmatter.get("title", qmd.stem)
+        description = frontmatter.get("description", "")
         url = qmd_to_url(str(qmd), base_url)
 
         if description:
@@ -434,11 +443,23 @@ def _collect_navbar_qmd_paths(navbar: YamlDict) -> list[tuple[str, Path]]:
 
 
 def _collect_reference_qmd_paths() -> list[Path]:
-    """Return all `.qmd` files under `reference/` except the auto-generated index."""
+    """Return all `.qmd` files under `reference/` except the auto-generated index.
+
+    A user-authored `index.qmd` (carrying a `reference:` frontmatter field —
+    single-page reference mode) is included; the auto-generated landing page
+    (no such field) is excluded.
+    """
     ref_dir = Path("reference")
     if not ref_dir.is_dir():
         return []
-    return [qmd for qmd in sorted(ref_dir.glob("*.qmd")) if qmd.stem != "index"]
+    paths: list[Path] = []
+    for qmd in sorted(ref_dir.glob("*.qmd")):
+        if qmd.stem == "index":
+            fm = read_frontmatter(qmd) or {}
+            if not fm.get("reference"):
+                continue
+        paths.append(qmd)
+    return paths
 
 
 def qmd_to_url(href: str, base_url: str) -> str:

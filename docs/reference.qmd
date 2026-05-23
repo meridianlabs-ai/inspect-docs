@@ -123,3 +123,25 @@ The page-level `reference:` field declares the binding (same field as on referen
 ## Reference Index
 
 A `reference/index.qmd` is automatically generated from the discovered reference pages. It groups API pages and CLI command pages into separate tables, each row showing the page title and its `description` field.
+
+## Single-Page Reference
+
+For small packages, a single hand-written page can stand in for the full multi-page layout. Author `reference/index.qmd` yourself with a `reference:` field in its frontmatter:
+
+```markdown
+---
+title: Reference
+reference: my_package
+---
+
+### Scanner
+### scanner_decorator
+```
+
+When `reference/` contains exactly this one `index.qmd`, Inspect Docs:
+
+- leaves your page alone (the auto-generated landing page is never written),
+- skips the Python API / CLI Commands sidebar sections,
+- folds a flat Reference link into the main sidebar instead of giving Reference its own sidebar pane.
+
+The page itself is still processed normally — H3 headings resolve against the page-level `reference:` field, and `{reference="..."}` headings work as on any other page. The opt-in is the `reference:` frontmatter field; without it, an `index.qmd` is treated as the auto-generated landing page and may be overwritten.
