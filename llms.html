@@ -235,7 +235,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#descriptions" id="toc-descriptions" class="nav-link" data-scroll-target="#descriptions">Descriptions</a></li>
   </ul></li>
   <li><a href="#full-documentation" id="toc-full-documentation" class="nav-link" data-scroll-target="#full-documentation">Full Documentation</a></li>
-  <li><a href="#markdown-pages" id="toc-markdown-pages" class="nav-link" data-scroll-target="#markdown-pages">Markdown Pages</a></li>
+  <li><a href="#markdown-pages" id="toc-markdown-pages" class="nav-link" data-scroll-target="#markdown-pages">Markdown Pages</a>
+  <ul class="collapse">
+  <li><a href="#custom-generation" id="toc-custom-generation" class="nav-link" data-scroll-target="#custom-generation">Custom Generation</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -328,8 +331,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>Copy as Markdown</strong> — copy the page’s Markdown source to the clipboard.</li>
 <li><strong>Open as Markdown</strong> — open the <code>.html.md</code> version in a new tab.</li>
 </ul>
+<section id="custom-generation" class="level3">
+<h3 class="anchored" data-anchor-id="custom-generation">Custom Generation</h3>
+<p>By default the <code>.html.md</code> for each page is produced by running pandoc on the rendered HTML. A page can override this by declaring an <code>llms-script</code> in its frontmatter — useful when the default conversion misses something, or when the Markdown should be generated from a source other than the rendered HTML (e.g.&nbsp;introspecting code or assembling a digest from data files):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> API Reference</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">llms-script</span><span class="kw">:</span><span class="at"> scripts/render_api_md.py</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The script path is resolved relative to the <code>.qmd</code> file. <code>.py</code> scripts are run via <code>python</code>; anything else is invoked directly and must be executable. The rendered page’s main content is piped in on stdin, and the script’s stdout becomes the full body of the <code>.html.md</code> file (no title is prepended — the script is in full control of the output):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env python</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>html <span class="op">=</span> sys.stdin.read()</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>sys.stdout.write(my_html_to_md(html))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If the declared script can’t be found, a warning is printed and the page falls back to pandoc.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

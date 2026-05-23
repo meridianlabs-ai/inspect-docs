@@ -118,25 +118,32 @@
     "href": "CHANGELOG.html",
     "title": "Inspect Docs",
     "section": "",
-    "text": "Pre-render no longer overwrites an existing .gitignore. Projects can now add their own patterns alongside the inspect-docs defaults without having them stomped on every render. A .gitignore is still written when the file is missing.\nAuto-detected “simple reference” mode: when reference/ contains exactly one user-authored index.qmd (with a reference: frontmatter field), the extension skips index auto-generation and the Python API / CLI wrapper sections, folding a flat Reference link into the main sidebar.\nNever overwrite a user-authored reference/index.qmd (one with a reference: field) with the auto-generated landing page.\nAuto-discover the project module name in post-render.py (matching pre-render.py) so the llms.txt Reference section appears without requiring an explicit inspect-docs.module setting."
+    "text": "New llms-script frontmatter field lets a page generate its own .html.md instead of going through pandoc. The script is resolved relative to the .qmd, receives the rendered main content on stdin, and writes the full .html.md body to stdout. .py scripts run via python; anything else is invoked directly.\nAuto-detected “simple reference” mode: when reference/ contains exactly one user-authored index.qmd (with a reference: frontmatter field), the extension skips index auto-generation and the Python API / CLI wrapper sections, folding a flat Reference link into the main sidebar.\nNever overwrite a user-authored reference/index.qmd (one with a reference: field) with the auto-generated landing page."
   },
   {
     "objectID": "CHANGELOG.html#may-2026",
     "href": "CHANGELOG.html#may-2026",
     "title": "Inspect Docs",
     "section": "",
-    "text": "Pre-render no longer overwrites an existing .gitignore. Projects can now add their own patterns alongside the inspect-docs defaults without having them stomped on every render. A .gitignore is still written when the file is missing.\nAuto-detected “simple reference” mode: when reference/ contains exactly one user-authored index.qmd (with a reference: frontmatter field), the extension skips index auto-generation and the Python API / CLI wrapper sections, folding a flat Reference link into the main sidebar.\nNever overwrite a user-authored reference/index.qmd (one with a reference: field) with the auto-generated landing page.\nAuto-discover the project module name in post-render.py (matching pre-render.py) so the llms.txt Reference section appears without requiring an explicit inspect-docs.module setting."
+    "text": "New llms-script frontmatter field lets a page generate its own .html.md instead of going through pandoc. The script is resolved relative to the .qmd, receives the rendered main content on stdin, and writes the full .html.md body to stdout. .py scripts run via python; anything else is invoked directly.\nAuto-detected “simple reference” mode: when reference/ contains exactly one user-authored index.qmd (with a reference: frontmatter field), the extension skips index auto-generation and the Python API / CLI wrapper sections, folding a flat Reference link into the main sidebar.\nNever overwrite a user-authored reference/index.qmd (one with a reference: field) with the auto-generated landing page."
   },
   {
     "objectID": "CHANGELOG.html#may-2026-1",
     "href": "CHANGELOG.html#may-2026-1",
     "title": "Inspect Docs",
-    "section": "1.0.6 (20 May 2026)",
-    "text": "1.0.6 (20 May 2026)\n\nEmit &lt;link rel=\"alternate\" type=\"text/markdown\"&gt; head tags pointing to /llms.txt, /llms-full.txt, and /llms-guide.txt on every page so coding agents can discover the LLM-readable docs from any URL.\nllms.txt, llms-full.txt, and llms-guide.txt now also include top-level pages reachable from website.navbar (e.g. listing pages on a separate tab) that aren’t already covered by inspect-docs.navigation or reference/."
+    "section": "1.0.7 (20 May 2026)",
+    "text": "1.0.7 (20 May 2026)\n\nPre-render no longer overwrites an existing .gitignore. Projects can now add their own patterns alongside the inspect-docs defaults without having them stomped on every render. A .gitignore is still written when the file is missing.\nAuto-discover the project module name in post-render.py (matching pre-render.py) so the llms.txt Reference section appears without requiring an explicit inspect-docs.module setting."
   },
   {
     "objectID": "CHANGELOG.html#may-2026-2",
     "href": "CHANGELOG.html#may-2026-2",
+    "title": "Inspect Docs",
+    "section": "1.0.6 (20 May 2026)",
+    "text": "1.0.6 (20 May 2026)\n\nEmit &lt;link rel=\"alternate\" type=\"text/markdown\"&gt; head tags pointing to /llms.txt, /llms-full.txt, and /llms-guide.txt on every page so coding agents can discover the LLM-readable docs from any URL.\nllms.txt, llms-full.txt, and llms-guide.txt now also include top-level pages reachable from website.navbar (e.g. listing pages on a separate tab) that aren’t already covered by inspect-docs.navigation or reference/."
+  },
+  {
+    "objectID": "CHANGELOG.html#may-2026-3",
+    "href": "CHANGELOG.html#may-2026-3",
     "title": "Inspect Docs",
     "section": "1.0.5 (05 May 2026)",
     "text": "1.0.5 (05 May 2026)\n\nAuto-detected “simple reference” mode: when reference/ contains exactly one user-authored index.qmd (with a reference: frontmatter field), the extension skips index auto-generation and the Python API / CLI wrapper sections, folding a flat Reference link into the main sidebar.\nNever overwrite a user-authored reference/index.qmd (one with a reference: field) with the auto-generated landing page.\nAuto-discover the project module name in post-render.py (matching pre-render.py) so the llms.txt Reference section appears without requiring an explicit inspect-docs.module setting.\nSkip griffe step if there is no reference generation in play.\nCache HTML→Markdown conversion in post-render to skip the per-page quarto pandoc subprocess when content is unchanged.\n\nCache reference frontmatter and symbol scan in pre-render so unchanged reference/*.qmd files are not re-read on every render.\n\nSkip the external-refs network download when the local refs-{pkg}.json cache was written within the last 24 hours (delete the file to force a refresh).\n\nCorrect copy page as markdown behavior for index page (/)."
@@ -214,7 +221,7 @@
     "href": "llms.html#markdown-pages",
     "title": "llms.txt",
     "section": "Markdown Pages",
-    "text": "Markdown Pages\nInspect Docs publishes a plain-Markdown version of each page at the same URL with .html.md appended. A page rendered at https://docs.example.com/guides/install.html is also available at https://docs.example.com/guides/install.html.md.\nInspect Docs also injects a Copy page button into every page header. The button lets readers:\n\nCopy as Markdown — copy the page’s Markdown source to the clipboard.\nOpen as Markdown — open the .html.md version in a new tab.",
+    "text": "Markdown Pages\nInspect Docs publishes a plain-Markdown version of each page at the same URL with .html.md appended. A page rendered at https://docs.example.com/guides/install.html is also available at https://docs.example.com/guides/install.html.md.\nInspect Docs also injects a Copy page button into every page header. The button lets readers:\n\nCopy as Markdown — copy the page’s Markdown source to the clipboard.\nOpen as Markdown — open the .html.md version in a new tab.\n\n\nCustom Generation\nBy default the .html.md for each page is produced by running pandoc on the rendered HTML. A page can override this by declaring an llms-script in its frontmatter — useful when the default conversion misses something, or when the Markdown should be generated from a source other than the rendered HTML (e.g. introspecting code or assembling a digest from data files):\n---\ntitle: API Reference\nllms-script: scripts/render_api_md.py\n---\nThe script path is resolved relative to the .qmd file. .py scripts are run via python; anything else is invoked directly and must be executable. The rendered page’s main content is piped in on stdin, and the script’s stdout becomes the full body of the .html.md file (no title is prepended — the script is in full control of the output):\n#!/usr/bin/env python\nimport sys\n\nhtml = sys.stdin.read()\nsys.stdout.write(my_html_to_md(html))\nIf the declared script can’t be found, a warning is printed and the page falls back to pandoc.",
     "crumbs": [
       "Home",
       "llms.txt"

@@ -59,3 +59,26 @@ Inspect Docs also injects a **Copy page** button into every page header. The but
 
 - **Copy as Markdown** — copy the page’s Markdown source to the clipboard.
 - **Open as Markdown** — open the `.html.md` version in a new tab.
+
+### Custom Generation
+
+By default the `.html.md` for each page is produced by running pandoc on the rendered HTML. A page can override this by declaring an `llms-script` in its frontmatter — useful when the default conversion misses something, or when the Markdown should be generated from a source other than the rendered HTML (e.g. introspecting code or assembling a digest from data files):
+
+``` yaml
+---
+title: API Reference
+llms-script: scripts/render_api_md.py
+---
+```
+
+The script path is resolved relative to the `.qmd` file. `.py` scripts are run via `python`; anything else is invoked directly and must be executable. The rendered page’s main content is piped in on stdin, and the script’s stdout becomes the full body of the `.html.md` file (no title is prepended — the script is in full control of the output):
+
+``` python
+#!/usr/bin/env python
+import sys
+
+html = sys.stdin.read()
+sys.stdout.write(my_html_to_md(html))
+```
+
+If the declared script can’t be found, a warning is printed and the page falls back to pandoc.
