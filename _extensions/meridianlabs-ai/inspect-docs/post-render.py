@@ -75,15 +75,26 @@ def generate_html_md_files(output_dir: Path, output_files: list[Path] | None) ->
             continue
 
         md_path = html_path.with_name(html_path.name.removesuffix(".html") + ".html.md")
-        convert_html_to_md(html_path, md_path)
+        qmd_path = Path(str(rel).removesuffix(".html") + ".qmd")
+        convert_html_to_md(html_path, md_path, qmd_path)
 
 
-def convert_html_to_md(html_path: Path, md_path: Path) -> None:
-    """Run pandoc to convert an HTML file to GFM Markdown.
+def convert_html_to_md(
+    html_path: Path, md_path: Path, qmd_path: Path | None = None
+) -> None:
+    """Convert a rendered HTML page to Markdown.
 
-    Cached: skips the pandoc subprocess when the inputs that drive it
-    (extracted main content, title, llms.lua mtime) are unchanged from
-    the previous run, recorded in a sidecar `<md_path>.sha` file.
+    By default runs pandoc with the bundled `llms.lua` filter. If the
+    source `.qmd` declares an `llms-script:` frontmatter field, that
+    script is invoked instead: it receives the extracted main content
+    on stdin and is expected to emit the full `.html.md` body on
+    stdout. The script path is resolved relative to the `.qmd` file;
+    `.py` scripts run via `python`, anything else is executed directly.
+
+    Cached: skips the subprocess when the inputs that drive it
+    (extracted main content, title, filter or script mtime) are
+    unchanged from the previous run, recorded in a sidecar
+    `<md_path>.sha` file.
     """
     # Extract just the <main class="content"> section to avoid
     # converting navigation chrome that the Lua filter would need to strip.
@@ -93,23 +104,54 @@ def convert_html_to_md(html_path: Path, md_path: Path) -> None:
     # Extract the title from the HTML
     title = extract_html_title(html_content)
 
-    # Cache key: hash the inputs the pandoc subprocess depends on.
-    # Including llms.lua's mtime invalidates the cache when the filter changes.
+    # Resolve optional user-provided llms-script (relative to the .qmd).
+    llms_script: Path | None = None
+    if qmd_path is not None and qmd_path.exists():
+        fm = read_frontmatter(qmd_path) or {}
+        script_value = fm.get("llms-script")
+        if script_value:
+            candidate = (qmd_path.parent / str(script_value)).resolve()
+            if candidate.exists():
+                llms_script = candidate
+            else:
+                sys.stderr.write(
+                    f"llms-script {script_value!r} declared in {qmd_path} "
+                    f"not found at {candidate} — falling back to pandoc.\n"
+                )
+
+    # Cache key: hash the inputs the subprocess depends on. Including
+    # the filter or script mtime invalidates the cache when either
+    # changes.
     digest = hashlib.sha256()
     digest.update(main_content.encode("utf-8"))
     digest.update(b"|")
     digest.update((title or "").encode("utf-8"))
     digest.update(b"|")
-    digest.update(str(_LLMS_LUA.stat().st_mtime_ns).encode("ascii"))
+    if llms_script is not None:
+        digest.update(b"script:")
+        digest.update(str(llms_script).encode("utf-8"))
+        digest.update(b"|")
+        digest.update(str(llms_script.stat().st_mtime_ns).encode("ascii"))
+    else:
+        digest.update(b"lua:")
+        digest.update(str(_LLMS_LUA.stat().st_mtime_ns).encode("ascii"))
     sha = digest.hexdigest()
 
     sha_path = md_path.with_suffix(md_path.suffix + ".sha")
     if md_path.exists() and sha_path.exists():
         try:
             if sha_path.read_text().strip() == sha:
-                return  # cache hit -- skip pandoc
+                return  # cache hit
         except OSError:
             pass
+
+    if llms_script is not None:
+        md_text = run_llms_script(llms_script, main_content)
+        if md_text is None:
+            return
+        md_path.write_text(md_text, encoding="utf-8")
+        sha_path.write_text(sha)
+        return
 
     with tempfile.NamedTemporaryFile(
         mode="w", suffix=".html", delete=False, encoding="utf-8"
@@ -143,6 +185,31 @@ def convert_html_to_md(html_path: Path, md_path: Path) -> None:
             sha_path.write_text(sha)
     finally:
         os.unlink(tmp_path)
+
+
+def run_llms_script(script: Path, main_content: str) -> str | None:
+    """Invoke a user `llms-script` with HTML on stdin, return markdown stdout.
+
+    Returns the script's stdout on success, or `None` on failure (with
+    a message written to stderr). `.py` scripts are run via `python`;
+    anything else is invoked directly and must be executable.
+    """
+    if script.suffix == ".py":
+        cmd = ["python", str(script)]
+    else:
+        cmd = [str(script)]
+    result = subprocess.run(
+        cmd,
+        input=main_content,
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        sys.stderr.write(
+            f"llms-script {script} exited with {result.returncode}\n{result.stderr}"
+        )
+        return None
+    return result.stdout
 
 
 def extract_main_content(html: str) -> str:
