@@ -42,7 +42,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-00bb9cb7cda113ac4013fc9b55ca6f24.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-60b6846f58d02926bc6ca5ecd6f15c48.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -70,6 +70,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<link rel="alternate" type="text/markdown" title="LLM-readable docs index" href="./llms.txt">
+<link rel="alternate" type="text/markdown" title="LLM-readable docs (full)" href="./llms-full.txt">
+<link rel="alternate" type="text/markdown" title="LLM-readable docs (user guide)" href="./llms-guide.txt">
 
 
 <meta property="og:title" content="Inspect Docs">
@@ -144,10 +147,14 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#april-2026" id="toc-april-2026" class="nav-link active" data-scroll-target="#april-2026">1.0.3 (12 April 2026)</a></li>
-  <li><a href="#april-2026-1" id="toc-april-2026-1" class="nav-link" data-scroll-target="#april-2026-1">1.0.2 (10 April 2026)</a></li>
-  <li><a href="#april-2026-2" id="toc-april-2026-2" class="nav-link" data-scroll-target="#april-2026-2">1.0.1 (07 April 2026)</a></li>
-  <li><a href="#april-2026-3" id="toc-april-2026-3" class="nav-link" data-scroll-target="#april-2026-3">1.0.0 (07 April 2026)</a></li>
+  <li><a href="#may-2026" id="toc-may-2026" class="nav-link active" data-scroll-target="#may-2026">1.0.7 (20 May 2026)</a></li>
+  <li><a href="#may-2026-1" id="toc-may-2026-1" class="nav-link" data-scroll-target="#may-2026-1">1.0.6 (20 May 2026)</a></li>
+  <li><a href="#may-2026-2" id="toc-may-2026-2" class="nav-link" data-scroll-target="#may-2026-2">1.0.5 (05 May 2026)</a></li>
+  <li><a href="#april-2026" id="toc-april-2026" class="nav-link" data-scroll-target="#april-2026">1.0.4 (14 April 2026)</a></li>
+  <li><a href="#april-2026-1" id="toc-april-2026-1" class="nav-link" data-scroll-target="#april-2026-1">1.0.3 (12 April 2026)</a></li>
+  <li><a href="#april-2026-2" id="toc-april-2026-2" class="nav-link" data-scroll-target="#april-2026-2">1.0.2 (10 April 2026)</a></li>
+  <li><a href="#april-2026-3" id="toc-april-2026-3" class="nav-link" data-scroll-target="#april-2026-3">1.0.1 (07 April 2026)</a></li>
+  <li><a href="#april-2026-4" id="toc-april-2026-4" class="nav-link" data-scroll-target="#april-2026-4">1.0.0 (07 April 2026)</a></li>
   </ul>
 </nav>
     </div>
@@ -157,26 +164,64 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+<section id="may-2026" class="level2">
+<h2 class="anchored" data-anchor-id="may-2026">1.0.7 (20 May 2026)</h2>
+<ul>
+<li>Pre-render no longer overwrites an existing <code>.gitignore</code>. Projects can now add their own patterns alongside the inspect-docs defaults without having them stomped on every render. A <code>.gitignore</code> is still written when the file is missing.</li>
+<li>Auto-detected “simple reference” mode: when <code>reference/</code> contains exactly one user-authored <code>index.qmd</code> (with a <code>reference:</code> frontmatter field), the extension skips index auto-generation and the Python API / CLI wrapper sections, folding a flat Reference link into the main sidebar.</li>
+<li>Never overwrite a user-authored <code>reference/index.qmd</code> (one with a <code>reference:</code> field) with the auto-generated landing page.</li>
+<li>Auto-discover the project module name in <code>post-render.py</code> (matching <code>pre-render.py</code>) so the llms.txt Reference section appears without requiring an explicit <code>inspect-docs.module</code> setting.</li>
+</ul>
+</section>
+<section id="may-2026-1" class="level2">
+<h2 class="anchored" data-anchor-id="may-2026-1">1.0.6 (20 May 2026)</h2>
+<ul>
+<li>Emit <code>&lt;link rel="alternate" type="text/markdown"&gt;</code> head tags pointing to <code>/llms.txt</code>, <code>/llms-full.txt</code>, and <code>/llms-guide.txt</code> on every page so coding agents can discover the LLM-readable docs from any URL.</li>
+<li><code>llms.txt</code>, <code>llms-full.txt</code>, and <code>llms-guide.txt</code> now also include top-level pages reachable from <code>website.navbar</code> (e.g.&nbsp;listing pages on a separate tab) that aren’t already covered by <code>inspect-docs.navigation</code> or <code>reference/</code>.</li>
+</ul>
+</section>
+<section id="may-2026-2" class="level2">
+<h2 class="anchored" data-anchor-id="may-2026-2">1.0.5 (05 May 2026)</h2>
+<ul>
+<li>Auto-detected “simple reference” mode: when <code>reference/</code> contains exactly one user-authored <code>index.qmd</code> (with a <code>reference:</code> frontmatter field), the extension skips index auto-generation and the Python API / CLI wrapper sections, folding a flat Reference link into the main sidebar.</li>
+<li>Never overwrite a user-authored <code>reference/index.qmd</code> (one with a <code>reference:</code> field) with the auto-generated landing page.</li>
+<li>Auto-discover the project module name in <code>post-render.py</code> (matching <code>pre-render.py</code>) so the llms.txt Reference section appears without requiring an explicit <code>inspect-docs.module</code> setting.</li>
+<li>Skip griffe step if there is no reference generation in play.</li>
+<li>Cache HTML→Markdown conversion in post-render to skip the per-page <code>quarto pandoc</code> subprocess when content is unchanged.<br>
+</li>
+<li>Cache reference frontmatter and symbol scan in pre-render so unchanged <code>reference/*.qmd</code> files are not re-read on every render.<br>
+</li>
+<li>Skip the external-refs network download when the local <code>refs-{pkg}.json</code> cache was written within the last 24 hours (delete the file to force a refresh).<br>
+</li>
+<li>Correct copy page as markdown behavior for index page (/).</li>
+</ul>
+</section>
 <section id="april-2026" class="level2">
-<h2 class="anchored" data-anchor-id="april-2026">1.0.3 (12 April 2026)</h2>
+<h2 class="anchored" data-anchor-id="april-2026">1.0.4 (14 April 2026)</h2>
+<ul>
+<li>Interlinking for pages in sub-directories.</li>
+</ul>
+</section>
+<section id="april-2026-1" class="level2">
+<h2 class="anchored" data-anchor-id="april-2026-1">1.0.3 (12 April 2026)</h2>
 <ul>
 <li>Various improvements.</li>
 </ul>
 </section>
-<section id="april-2026-1" class="level2">
-<h2 class="anchored" data-anchor-id="april-2026-1">1.0.2 (10 April 2026)</h2>
+<section id="april-2026-2" class="level2">
+<h2 class="anchored" data-anchor-id="april-2026-2">1.0.2 (10 April 2026)</h2>
 <ul>
 <li>Only write files that have changed in pre-render.py.</li>
 </ul>
 </section>
-<section id="april-2026-2" class="level2">
-<h2 class="anchored" data-anchor-id="april-2026-2">1.0.1 (07 April 2026)</h2>
+<section id="april-2026-3" class="level2">
+<h2 class="anchored" data-anchor-id="april-2026-3">1.0.1 (07 April 2026)</h2>
 <ul>
 <li>Changes required for Inspect Scout docs migration.</li>
 </ul>
 </section>
-<section id="april-2026-3" class="level2">
-<h2 class="anchored" data-anchor-id="april-2026-3">1.0.0 (07 April 2026)</h2>
+<section id="april-2026-4" class="level2">
+<h2 class="anchored" data-anchor-id="april-2026-4">1.0.0 (07 April 2026)</h2>
 <ul>
 <li>Initial release.</li>
 </ul>
@@ -204,7 +249,10 @@ ul.task-list li input[type="checkbox"] {
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-  var mdUrl = window.location.pathname.replace(/\.html$/, ".html.md");
+  var path = window.location.pathname;
+  var mdUrl = path.endsWith("/")
+    ? path + "index.html.md"
+    : path.replace(/\.html$/, ".html.md");
   var btn = document.getElementById("copy-page-btn");
   var cachedMarkdown = null;
 

@@ -118,32 +118,60 @@
     "href": "CHANGELOG.html",
     "title": "Inspect Docs",
     "section": "",
-    "text": "Various improvements."
+    "text": "Pre-render no longer overwrites an existing .gitignore. Projects can now add their own patterns alongside the inspect-docs defaults without having them stomped on every render. A .gitignore is still written when the file is missing.\nAuto-detected “simple reference” mode: when reference/ contains exactly one user-authored index.qmd (with a reference: frontmatter field), the extension skips index auto-generation and the Python API / CLI wrapper sections, folding a flat Reference link into the main sidebar.\nNever overwrite a user-authored reference/index.qmd (one with a reference: field) with the auto-generated landing page.\nAuto-discover the project module name in post-render.py (matching pre-render.py) so the llms.txt Reference section appears without requiring an explicit inspect-docs.module setting."
+  },
+  {
+    "objectID": "CHANGELOG.html#may-2026",
+    "href": "CHANGELOG.html#may-2026",
+    "title": "Inspect Docs",
+    "section": "",
+    "text": "Pre-render no longer overwrites an existing .gitignore. Projects can now add their own patterns alongside the inspect-docs defaults without having them stomped on every render. A .gitignore is still written when the file is missing.\nAuto-detected “simple reference” mode: when reference/ contains exactly one user-authored index.qmd (with a reference: frontmatter field), the extension skips index auto-generation and the Python API / CLI wrapper sections, folding a flat Reference link into the main sidebar.\nNever overwrite a user-authored reference/index.qmd (one with a reference: field) with the auto-generated landing page.\nAuto-discover the project module name in post-render.py (matching pre-render.py) so the llms.txt Reference section appears without requiring an explicit inspect-docs.module setting."
+  },
+  {
+    "objectID": "CHANGELOG.html#may-2026-1",
+    "href": "CHANGELOG.html#may-2026-1",
+    "title": "Inspect Docs",
+    "section": "1.0.6 (20 May 2026)",
+    "text": "1.0.6 (20 May 2026)\n\nEmit &lt;link rel=\"alternate\" type=\"text/markdown\"&gt; head tags pointing to /llms.txt, /llms-full.txt, and /llms-guide.txt on every page so coding agents can discover the LLM-readable docs from any URL.\nllms.txt, llms-full.txt, and llms-guide.txt now also include top-level pages reachable from website.navbar (e.g. listing pages on a separate tab) that aren’t already covered by inspect-docs.navigation or reference/."
+  },
+  {
+    "objectID": "CHANGELOG.html#may-2026-2",
+    "href": "CHANGELOG.html#may-2026-2",
+    "title": "Inspect Docs",
+    "section": "1.0.5 (05 May 2026)",
+    "text": "1.0.5 (05 May 2026)\n\nAuto-detected “simple reference” mode: when reference/ contains exactly one user-authored index.qmd (with a reference: frontmatter field), the extension skips index auto-generation and the Python API / CLI wrapper sections, folding a flat Reference link into the main sidebar.\nNever overwrite a user-authored reference/index.qmd (one with a reference: field) with the auto-generated landing page.\nAuto-discover the project module name in post-render.py (matching pre-render.py) so the llms.txt Reference section appears without requiring an explicit inspect-docs.module setting.\nSkip griffe step if there is no reference generation in play.\nCache HTML→Markdown conversion in post-render to skip the per-page quarto pandoc subprocess when content is unchanged.\n\nCache reference frontmatter and symbol scan in pre-render so unchanged reference/*.qmd files are not re-read on every render.\n\nSkip the external-refs network download when the local refs-{pkg}.json cache was written within the last 24 hours (delete the file to force a refresh).\n\nCorrect copy page as markdown behavior for index page (/)."
   },
   {
     "objectID": "CHANGELOG.html#april-2026",
     "href": "CHANGELOG.html#april-2026",
     "title": "Inspect Docs",
-    "section": "",
-    "text": "Various improvements."
+    "section": "1.0.4 (14 April 2026)",
+    "text": "1.0.4 (14 April 2026)\n\nInterlinking for pages in sub-directories."
   },
   {
     "objectID": "CHANGELOG.html#april-2026-1",
     "href": "CHANGELOG.html#april-2026-1",
     "title": "Inspect Docs",
-    "section": "1.0.2 (10 April 2026)",
-    "text": "1.0.2 (10 April 2026)\n\nOnly write files that have changed in pre-render.py."
+    "section": "1.0.3 (12 April 2026)",
+    "text": "1.0.3 (12 April 2026)\n\nVarious improvements."
   },
   {
     "objectID": "CHANGELOG.html#april-2026-2",
     "href": "CHANGELOG.html#april-2026-2",
     "title": "Inspect Docs",
-    "section": "1.0.1 (07 April 2026)",
-    "text": "1.0.1 (07 April 2026)\n\nChanges required for Inspect Scout docs migration."
+    "section": "1.0.2 (10 April 2026)",
+    "text": "1.0.2 (10 April 2026)\n\nOnly write files that have changed in pre-render.py."
   },
   {
     "objectID": "CHANGELOG.html#april-2026-3",
     "href": "CHANGELOG.html#april-2026-3",
+    "title": "Inspect Docs",
+    "section": "1.0.1 (07 April 2026)",
+    "text": "1.0.1 (07 April 2026)\n\nChanges required for Inspect Scout docs migration."
+  },
+  {
+    "objectID": "CHANGELOG.html#april-2026-4",
+    "href": "CHANGELOG.html#april-2026-4",
     "title": "Inspect Docs",
     "section": "1.0.0 (07 April 2026)",
     "text": "1.0.0 (07 April 2026)\n\nInitial release."
@@ -242,6 +270,17 @@
     "title": "Reference",
     "section": "Reference Index",
     "text": "Reference Index\nA reference/index.qmd is automatically generated from the discovered reference pages. It groups API pages and CLI command pages into separate tables, each row showing the page title and its description field.",
+    "crumbs": [
+      "Home",
+      "Reference"
+    ]
+  },
+  {
+    "objectID": "reference.html#single-page-reference",
+    "href": "reference.html#single-page-reference",
+    "title": "Reference",
+    "section": "Single-Page Reference",
+    "text": "Single-Page Reference\nFor small packages, a single hand-written page can stand in for the full multi-page layout. Author reference/index.qmd yourself with a reference: field in its frontmatter:\n---\ntitle: Reference\nreference: my_package\n---\n\n### Scanner\n### scanner_decorator\nWhen reference/ contains exactly this one index.qmd, Inspect Docs:\n\nleaves your page alone (the auto-generated landing page is never written),\nskips the Python API / CLI Commands sidebar sections,\nfolds a flat Reference link into the main sidebar instead of giving Reference its own sidebar pane.\n\nThe page itself is still processed normally — H3 headings resolve against the page-level reference: field, and {reference=\"...\"} headings work as on any other page. The opt-in is the reference: frontmatter field; without it, an index.qmd is treated as the auto-generated landing page and may be overwritten.",
     "crumbs": [
       "Home",
       "Reference"
