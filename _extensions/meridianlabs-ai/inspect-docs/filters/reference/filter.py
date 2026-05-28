@@ -132,12 +132,26 @@ def main() -> Any:
 
         initialized[0] = True
 
+        # `expand-kwargs` (default true) controls whether `**kwargs: Unpack[TD]`
+        # is expanded into individual parameter entries. Disable the griffe
+        # extension entirely when off, so docstrings and signatures both keep
+        # the original `**kwargs` form.
+        expand_kwargs = True
+        if inspect_docs and "expand-kwargs" in inspect_docs:
+            expand_kwargs = (
+                pf.stringify(inspect_docs["expand-kwargs"]).strip().lower() != "false"
+            )
+
+        extensions = (
+            Extensions(UnpackTypedDictExtension()) if expand_kwargs else Extensions()
+        )
+
         try:
             module = cast(
                 Module,
                 griffe.load(
                     module_name,
-                    extensions=Extensions(UnpackTypedDictExtension()),
+                    extensions=extensions,
                     docstring_parser="google",
                 ),
             )
@@ -156,7 +170,9 @@ def main() -> Any:
             .strip()
         )
         source_url = f"https://github.com/{repo}/blob/{sha}/src"
-        options = DocParseOptions(module=module, source_url=source_url)
+        options = DocParseOptions(
+            module=module, source_url=source_url, expand_kwargs=expand_kwargs
+        )
 
         parse_options_cache.append(options)
         module_name_cache.append(module_name)

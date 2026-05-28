@@ -1,3 +1,7 @@
+## 1.0.9 (28 May 2026)
+
+- Add `expand-kwargs` option to control whether we expand `Unpack[TypedDict]` kwargs declarations. 
+
 ## 1.0.8 (23 May 2026)
 
 - New `llms-script` frontmatter field lets a page generate its own `.html.md` instead of going through pandoc. The script is resolved relative to the `.qmd`, receives the rendered main content on stdin, and writes the full `.html.md` body to stdout. `.py` scripts run via `python`; anything else is invoked directly.

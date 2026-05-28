@@ -165,6 +165,7 @@ Options available under `inspect-docs:` in `_quarto.yml`:
 | `navigation`    | Navbar and sidebar entries (see [Articles](articles.qmd)).                                   |
 | `sidebar`       | Sidebar mode: `true` (default when `navigation` is set) shows the main sidebar alongside a separate reference sidebar; `false` suppresses the main sidebar; `unified` merges the reference sidebar into the main sidebar. |
 | `external_refs` | Map of `package_name: docs_url` for cross-package interlinking (see [Interlinks](interlinks.qmd)). |
+| `expand-kwargs` | Expand `**kwargs: Unpack[TypedDict]` into individual parameter entries on reference pages. Defaults to `true`; set `false` to render the original `**kwargs` form. |
 
 ### Custom Navbar
 
