@@ -53,6 +53,26 @@ def _is_empty_section(elem: pf.Header) -> bool:
     """True when no content blocks sit between this heading and the next."""
     nxt = elem.next
     return nxt is None or (isinstance(nxt, pf.Header) and nxt.level <= elem.level)
+
+
+def _meta_bool(value: Any, default: bool) -> bool:
+    """Coerce a panflute metadata value to a bool.
+
+    YAML `true`/`false` becomes `pf.MetaBool`, whose `pf.stringify` returns
+    `""` -- a plain string comparison would silently always fall through to
+    the default. Handle MetaBool explicitly, and accept string forms (`"true"`,
+    `"false"`, `"1"`, `"0"`, etc.) for cases where the value was quoted.
+    """
+    if isinstance(value, pf.MetaBool):
+        return value.boolean
+    text = pf.stringify(value).strip().lower()
+    if text in ("true", "1", "yes", "on"):
+        return True
+    if text in ("false", "0", "no", "off"):
+        return False
+    return default
+
+
 # Cheap discovery cache, used to short-circuit the expensive griffe load
 # in `get_parse_options` for pages that don't actually need symbol parsing.
 _cheap_cache: dict[str, tuple[str | None, str | None]] = {}
@@ -138,9 +158,7 @@ def main() -> Any:
         # the original `**kwargs` form.
         expand_kwargs = True
         if inspect_docs and "expand-kwargs" in inspect_docs:
-            expand_kwargs = (
-                pf.stringify(inspect_docs["expand-kwargs"]).strip().lower() != "false"
-            )
+            expand_kwargs = _meta_bool(inspect_docs["expand-kwargs"], default=True)
 
         extensions = (
             Extensions(UnpackTypedDictExtension()) if expand_kwargs else Extensions()
