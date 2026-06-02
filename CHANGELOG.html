@@ -147,10 +147,12 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#may-2026" id="toc-may-2026" class="nav-link active" data-scroll-target="#may-2026">1.0.8 (23 May 2026)</a></li>
-  <li><a href="#may-2026-1" id="toc-may-2026-1" class="nav-link" data-scroll-target="#may-2026-1">1.0.7 (20 May 2026)</a></li>
-  <li><a href="#may-2026-2" id="toc-may-2026-2" class="nav-link" data-scroll-target="#may-2026-2">1.0.6 (20 May 2026)</a></li>
-  <li><a href="#may-2026-3" id="toc-may-2026-3" class="nav-link" data-scroll-target="#may-2026-3">1.0.5 (05 May 2026)</a></li>
+  <li><a href="#june-2026" id="toc-june-2026" class="nav-link active" data-scroll-target="#june-2026">1.0.10 (02 June 2026)</a></li>
+  <li><a href="#may-2026" id="toc-may-2026" class="nav-link" data-scroll-target="#may-2026">1.0.9 (28 May 2026)</a></li>
+  <li><a href="#may-2026-1" id="toc-may-2026-1" class="nav-link" data-scroll-target="#may-2026-1">1.0.8 (23 May 2026)</a></li>
+  <li><a href="#may-2026-2" id="toc-may-2026-2" class="nav-link" data-scroll-target="#may-2026-2">1.0.7 (20 May 2026)</a></li>
+  <li><a href="#may-2026-3" id="toc-may-2026-3" class="nav-link" data-scroll-target="#may-2026-3">1.0.6 (20 May 2026)</a></li>
+  <li><a href="#may-2026-4" id="toc-may-2026-4" class="nav-link" data-scroll-target="#may-2026-4">1.0.5 (05 May 2026)</a></li>
   <li><a href="#april-2026" id="toc-april-2026" class="nav-link" data-scroll-target="#april-2026">1.0.4 (14 April 2026)</a></li>
   <li><a href="#april-2026-1" id="toc-april-2026-1" class="nav-link" data-scroll-target="#april-2026-1">1.0.3 (12 April 2026)</a></li>
   <li><a href="#april-2026-2" id="toc-april-2026-2" class="nav-link" data-scroll-target="#april-2026-2">1.0.2 (10 April 2026)</a></li>
@@ -165,30 +167,43 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+<section id="june-2026" class="level2">
+<h2 class="anchored" data-anchor-id="june-2026">1.0.10 (02 June 2026)</h2>
+<ul>
+<li><code>inspect-docs.sidebar</code> now accepts a dict of Quarto sidebar properties (e.g.&nbsp;<code>collapse-level</code>, <code>style</code>) that are merged onto the generated main sidebar. Set <code>collapse-level: 1</code> for quarto.org-style navigation where only the selected top-level section is expanded. The existing <code>false</code> and <code>"unified"</code> values are unchanged.</li>
+<li>New <code>inspect-docs.navbar</code> option as an alias for <code>website.navbar</code>, letting all navigation customization live under the <code>inspect-docs</code> key. Its values are forwarded into the generated navbar (Quarto only merges <code>website.navbar</code> natively); <code>website.navbar</code> still works and wins on conflict.</li>
+</ul>
+</section>
 <section id="may-2026" class="level2">
-<h2 class="anchored" data-anchor-id="may-2026">1.0.8 (23 May 2026)</h2>
+<h2 class="anchored" data-anchor-id="may-2026">1.0.9 (28 May 2026)</h2>
+<ul>
+<li>Add <code>expand-kwargs</code> option to control whether we expand <code>Unpack[TypedDict]</code> kwargs declarations.</li>
+</ul>
+</section>
+<section id="may-2026-1" class="level2">
+<h2 class="anchored" data-anchor-id="may-2026-1">1.0.8 (23 May 2026)</h2>
 <ul>
 <li>New <code>llms-script</code> frontmatter field lets a page generate its own <code>.html.md</code> instead of going through pandoc. The script is resolved relative to the <code>.qmd</code>, receives the rendered main content on stdin, and writes the full <code>.html.md</code> body to stdout. <code>.py</code> scripts run via <code>python</code>; anything else is invoked directly.</li>
 <li>Auto-detected “simple reference” mode: when <code>reference/</code> contains exactly one user-authored <code>index.qmd</code> (with a <code>reference:</code> frontmatter field), the extension skips index auto-generation and the Python API / CLI wrapper sections, folding a flat Reference link into the main sidebar.</li>
 <li>Never overwrite a user-authored <code>reference/index.qmd</code> (one with a <code>reference:</code> field) with the auto-generated landing page.</li>
 </ul>
 </section>
-<section id="may-2026-1" class="level2">
-<h2 class="anchored" data-anchor-id="may-2026-1">1.0.7 (20 May 2026)</h2>
+<section id="may-2026-2" class="level2">
+<h2 class="anchored" data-anchor-id="may-2026-2">1.0.7 (20 May 2026)</h2>
 <ul>
 <li>Pre-render no longer overwrites an existing <code>.gitignore</code>. Projects can now add their own patterns alongside the inspect-docs defaults without having them stomped on every render. A <code>.gitignore</code> is still written when the file is missing.</li>
 <li>Auto-discover the project module name in <code>post-render.py</code> (matching <code>pre-render.py</code>) so the llms.txt Reference section appears without requiring an explicit <code>inspect-docs.module</code> setting.</li>
 </ul>
 </section>
-<section id="may-2026-2" class="level2">
-<h2 class="anchored" data-anchor-id="may-2026-2">1.0.6 (20 May 2026)</h2>
+<section id="may-2026-3" class="level2">
+<h2 class="anchored" data-anchor-id="may-2026-3">1.0.6 (20 May 2026)</h2>
 <ul>
 <li>Emit <code>&lt;link rel="alternate" type="text/markdown"&gt;</code> head tags pointing to <code>/llms.txt</code>, <code>/llms-full.txt</code>, and <code>/llms-guide.txt</code> on every page so coding agents can discover the LLM-readable docs from any URL.</li>
 <li><code>llms.txt</code>, <code>llms-full.txt</code>, and <code>llms-guide.txt</code> now also include top-level pages reachable from <code>website.navbar</code> (e.g.&nbsp;listing pages on a separate tab) that aren’t already covered by <code>inspect-docs.navigation</code> or <code>reference/</code>.</li>
 </ul>
 </section>
-<section id="may-2026-3" class="level2">
-<h2 class="anchored" data-anchor-id="may-2026-3">1.0.5 (05 May 2026)</h2>
+<section id="may-2026-4" class="level2">
+<h2 class="anchored" data-anchor-id="may-2026-4">1.0.5 (05 May 2026)</h2>
 <ul>
 <li>Auto-detected “simple reference” mode: when <code>reference/</code> contains exactly one user-authored <code>index.qmd</code> (with a <code>reference:</code> frontmatter field), the extension skips index auto-generation and the Python API / CLI wrapper sections, folding a flat Reference link into the main sidebar.</li>
 <li>Never overwrite a user-authored <code>reference/index.qmd</code> (one with a <code>reference:</code> field) with the auto-generated landing page.</li>

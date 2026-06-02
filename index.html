@@ -244,6 +244,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#options" id="toc-options" class="nav-link" data-scroll-target="#options">Options</a>
   <ul class="collapse">
   <li><a href="#custom-navbar" id="toc-custom-navbar" class="nav-link" data-scroll-target="#custom-navbar">Custom Navbar</a></li>
+  <li><a href="#collapsing-the-sidebar" id="toc-collapsing-the-sidebar" class="nav-link" data-scroll-target="#collapsing-the-sidebar">Collapsing the Sidebar</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -438,17 +439,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="even">
 <td><code>sidebar</code></td>
-<td>Sidebar mode: <code>true</code> (default when <code>navigation</code> is set) shows the main sidebar alongside a separate reference sidebar; <code>false</code> suppresses the main sidebar; <code>unified</code> merges the reference sidebar into the main sidebar.</td>
+<td>Sidebar mode: <code>true</code> (default when <code>navigation</code> is set) shows the main sidebar alongside a separate reference sidebar; <code>false</code> suppresses the main sidebar; <code>unified</code> merges the reference sidebar into the main sidebar. May also be a dict of <a href="https://quarto.org/docs/websites/website-navigation.html#side-navigation">Quarto sidebar properties</a> (e.g.&nbsp;<code>collapse-level</code>, <code>style</code>) merged onto the main sidebar — see <a href="#collapsing-the-sidebar">Collapsing the Sidebar</a>.</td>
 </tr>
 <tr class="odd">
+<td><code>navbar</code></td>
+<td>Navbar overrides — an alias for <code>website.navbar</code> (<code>left</code>, <code>right</code>, <code>logo</code>, …) that keeps all navigation customization under <code>inspect-docs:</code>. See <a href="#custom-navbar">Custom Navbar</a>.</td>
+</tr>
+<tr class="even">
 <td><code>external_refs</code></td>
 <td>Map of <code>package_name: docs_url</code> for cross-package interlinking (see <a href="./interlinks.html">Interlinks</a>).</td>
+</tr>
+<tr class="odd">
+<td><code>expand-kwargs</code></td>
+<td>Expand <code>**kwargs: Unpack[TypedDict]</code> into individual parameter entries on reference pages. Defaults to <code>true</code>; set <code>false</code> to render the original <code>**kwargs</code> form.</td>
 </tr>
 </tbody>
 </table>
 <section id="custom-navbar" class="level3">
 <h3 class="anchored" data-anchor-id="custom-navbar">Custom Navbar</h3>
 <p>The extension builds <code>website.navbar.left</code> from <code>inspect-docs.navigation</code> and <code>website.navbar.right</code> from <code>repo</code> + <code>CHANGELOG.md</code> detection. If you want finer control — for example, a flat top-level navbar with no dropdowns — you can provide <code>website.navbar.left</code> (or <code>right</code>) directly in <code>_quarto.yml</code>. When the extension sees a user-provided <code>left</code>, it skips its own generation (including the auto-appended “Reference” link, which you can add manually). The sidebar continues to auto-generate from <code>inspect-docs.navigation</code> either way.</p>
+<p>If you’d rather keep all configuration under the <code>inspect-docs:</code> key, use <code>inspect-docs.navbar</code> instead of <code>website.navbar</code> — it’s an alias that accepts the same keys:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">inspect-docs</span><span class="kw">:</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">navbar</span><span class="kw">:</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">left</span><span class="kw">:</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">text</span><span class="kw">:</span><span class="at"> User Guide</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">href</span><span class="kw">:</span><span class="at"> index.qmd</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">text</span><span class="kw">:</span><span class="at"> Reference</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">href</span><span class="kw">:</span><span class="at"> reference/index.qmd</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Both forms can be combined; on conflict <code>website.navbar</code> wins.</p>
+</section>
+<section id="collapsing-the-sidebar" class="level3">
+<h3 class="anchored" data-anchor-id="collapsing-the-sidebar">Collapsing the Sidebar</h3>
+<p>By default the main sidebar follows Quarto’s default <code>collapse-level</code> of <code>2</code>, so every top-level section is expanded at once. To get the <a href="https://quarto.org">quarto.org</a> navigation style — where only the currently-selected section is expanded — pass a dict of sidebar properties via <code>inspect-docs.sidebar</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">inspect-docs</span><span class="kw">:</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">sidebar</span><span class="kw">:</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">collapse-level</span><span class="kw">:</span><span class="at"> </span><span class="dv">1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Any <a href="https://quarto.org/docs/websites/website-navigation.html#side-navigation">Quarto sidebar property</a> (<code>collapse-level</code>, <code>style</code>, <code>alignment</code>, <code>search</code>, …) is merged onto the generated main sidebar; the auto-generated <code>title</code> and <code>contents</code> are preserved. The string forms <code>false</code> and <code>unified</code> continue to work as before.</p>
 
 
 </section>

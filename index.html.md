@@ -159,9 +159,37 @@ Options available under `inspect-docs:` in `_quarto.yml`:
 | `module` | Python import name. Auto-discovered from `pyproject.toml`; set explicitly only when the import name differs from the distribution name. |
 | `cli` | CLI binary name (for Click command pages). Auto-discovered from `pyproject.toml`’s `[project.scripts]`; set explicitly when the binary name differs from the module name. |
 | `navigation` | Navbar and sidebar entries (see [Articles](./articles.html.md)). |
-| `sidebar` | Sidebar mode: `true` (default when `navigation` is set) shows the main sidebar alongside a separate reference sidebar; `false` suppresses the main sidebar; `unified` merges the reference sidebar into the main sidebar. |
+| `sidebar` | Sidebar mode: `true` (default when `navigation` is set) shows the main sidebar alongside a separate reference sidebar; `false` suppresses the main sidebar; `unified` merges the reference sidebar into the main sidebar. May also be a dict of [Quarto sidebar properties](https://quarto.org/docs/websites/website-navigation.html#side-navigation) (e.g. `collapse-level`, `style`) merged onto the main sidebar — see [Collapsing the Sidebar](#collapsing-the-sidebar). |
+| `navbar` | Navbar overrides — an alias for `website.navbar` (`left`, `right`, `logo`, …) that keeps all navigation customization under `inspect-docs:`. See [Custom Navbar](#custom-navbar). |
 | `external_refs` | Map of `package_name: docs_url` for cross-package interlinking (see [Interlinks](./interlinks.html.md)). |
+| `expand-kwargs` | Expand `**kwargs: Unpack[TypedDict]` into individual parameter entries on reference pages. Defaults to `true`; set `false` to render the original `**kwargs` form. |
 
 ### Custom Navbar
 
 The extension builds `website.navbar.left` from `inspect-docs.navigation` and `website.navbar.right` from `repo` + `CHANGELOG.md` detection. If you want finer control — for example, a flat top-level navbar with no dropdowns — you can provide `website.navbar.left` (or `right`) directly in `_quarto.yml`. When the extension sees a user-provided `left`, it skips its own generation (including the auto-appended “Reference” link, which you can add manually). The sidebar continues to auto-generate from `inspect-docs.navigation` either way.
+
+If you’d rather keep all configuration under the `inspect-docs:` key, use `inspect-docs.navbar` instead of `website.navbar` — it’s an alias that accepts the same keys:
+
+``` yaml
+inspect-docs:
+  navbar:
+    left:
+      - text: User Guide
+        href: index.qmd
+      - text: Reference
+        href: reference/index.qmd
+```
+
+Both forms can be combined; on conflict `website.navbar` wins.
+
+### Collapsing the Sidebar
+
+By default the main sidebar follows Quarto’s default `collapse-level` of `2`, so every top-level section is expanded at once. To get the [quarto.org](https://quarto.org) navigation style — where only the currently-selected section is expanded — pass a dict of sidebar properties via `inspect-docs.sidebar`:
+
+``` yaml
+inspect-docs:
+  sidebar:
+    collapse-level: 1
+```
+
+Any [Quarto sidebar property](https://quarto.org/docs/websites/website-navigation.html#side-navigation) (`collapse-level`, `style`, `alignment`, `search`, …) is merged onto the generated main sidebar; the auto-generated `title` and `contents` are preserved. The string forms `false` and `unified` continue to work as before.
