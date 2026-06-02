@@ -1,3 +1,8 @@
+## 1.0.10 (02 June 2026)
+
+- `inspect-docs.sidebar` now accepts a dict of Quarto sidebar properties (e.g. `collapse-level`, `style`) that are merged onto the generated main sidebar. Set `collapse-level: 1` for quarto.org-style navigation where only the selected top-level section is expanded. The existing `false` and `"unified"` values are unchanged.
+- New `inspect-docs.navbar` option as an alias for `website.navbar`, letting all navigation customization live under the `inspect-docs` key. Its values are forwarded into the generated navbar (Quarto only merges `website.navbar` natively); `website.navbar` still works and wins on conflict.
+
 ## 1.0.9 (28 May 2026)
 
 - Add `expand-kwargs` option to control whether we expand `Unpack[TypedDict]` kwargs declarations. 
