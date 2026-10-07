@@ -167,6 +167,7 @@ Options available under `inspect-docs:` in `_quarto.yml`:
 | `navbar`        | Navbar overrides — an alias for `website.navbar` (`left`, `right`, `logo`, …) that keeps all navigation customization under `inspect-docs:`. See [Custom Navbar](#custom-navbar). |
 | `external_refs` | Map of `package_name: docs_url` for cross-package interlinking (see [Interlinks](interlinks.qmd)). |
 | `expand-kwargs` | Expand `**kwargs: Unpack[TypedDict]` into individual parameter entries on reference pages. Defaults to `true`; set `false` to render the original `**kwargs` form. |
+| `extra-modules` | List of other top-level packages the module re-exports from (for example `[inspect_core]` for `inspect_ai`). They load into the same API loader first, so reference pages can resolve names re-exported from them. |
 
 ### Custom Navbar
 

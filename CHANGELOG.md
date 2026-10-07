@@ -1,3 +1,7 @@
+## Unreleased
+
+- New `extra-modules` option: other top-level packages the module re-exports from load into the same griffe loader, so reference pages resolve names re-exported from them instead of failing with `AliasResolutionError`.
+
 ## 1.0.10 (02 June 2026)
 
 - `inspect-docs.sidebar` now accepts a dict of Quarto sidebar properties (e.g. `collapse-level`, `style`) that are merged onto the generated main sidebar. Set `collapse-level: 1` for quarto.org-style navigation where only the selected top-level section is expanded. The existing `false` and `"unified"` values are unchanged.
