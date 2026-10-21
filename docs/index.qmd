@@ -107,11 +107,10 @@ CI installs `.[dev]`. The docs workflow and `make docs` install `.[dev,doc]`.
 
 ### Preview
 
-By default, Inspect Docs will symlink to any `README.md` and `CHANGELOG.md` in the root of your repo and create a site based on their contents. Preview it with:
+By default, Inspect Docs will symlink to any `README.md` and `CHANGELOG.md` in the root of your repo and create a site based on their contents. Preview it from the root of your repo with:
 
 ```bash
-cd docs
-quarto preview
+uv run --group doc quarto preview docs
 ```
 
 ## Articles
