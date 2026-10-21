@@ -57,7 +57,7 @@ All `inspect-docs:` fields are optional; see [Options](#options) below for the f
 
 ### Dependencies
 
-Inspect Docs requires Quarto >= 1.7 plus a handful of Python packages. Add them to your `dev` dependencies:
+Inspect Docs requires Quarto >= 1.7 plus a handful of Python packages. Put them in a `doc` dependency group, not in `dev`. Only the docs build needs them, and `quarto-cli` has no wheel, so installing it builds it from source and downloads Quarto. That slows every CI job that installs it.
 
 ```toml
 [dependency-groups]
@@ -66,7 +66,6 @@ dev = [
     "pytest",
     "pyright",
     ...
-    {include-group = "doc"},
 ]
 doc = [
     "jupyter",
@@ -78,13 +77,42 @@ doc = [
     "rich",
     "quarto-cli>=1.7",
 ]
+
+[tool.uv]
+default-groups = ["dev", "doc"]
 ```
 
-Then install them:
+With `default-groups`, `uv sync` installs both groups locally:
 
 ```bash
 uv sync
 ```
+
+In CI jobs that don't build the docs, set `UV_NO_GROUP: doc` for the whole job (uv 0.9.8 or later). Passing `--no-group doc` to `uv sync` is not enough, because a later `uv run` syncs the default groups again and installs `doc`.
+
+```yaml
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      UV_NO_GROUP: doc
+    steps:
+      ...
+      - run: uv sync
+      - run: uv run pytest
+```
+
+The docs workflow and `make docs` need the docs packages, so leave `UV_NO_GROUP` unset there. `uv sync` and `uv run` then install them.
+
+If your project uses extras instead of dependency groups, make `doc` an extra and leave it out of `dev`:
+
+```toml
+[project.optional-dependencies]
+dev = ["ruff", "pytest", "pyright"]
+doc = ["jupyter", "panflute", ..., "quarto-cli>=1.7"]
+```
+
+CI installs `.[dev]`. The docs workflow and `make docs` install `.[dev,doc]`.
 
 ### Preview
 
