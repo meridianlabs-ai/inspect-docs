@@ -77,32 +77,23 @@ doc = [
     "rich",
     "quarto-cli>=1.7",
 ]
-
-[tool.uv]
-default-groups = ["dev", "doc"]
 ```
 
-With `default-groups`, `uv sync` installs both groups locally:
+Keep `doc` out of `tool.uv.default-groups` too. Then `uv sync` and `uv run` leave the docs packages out, so CI jobs that don't build the docs need no extra settings.
+
+Install the group when you work on the docs:
 
 ```bash
-uv sync
+uv sync --group doc
 ```
 
-In CI jobs that don't build the docs, set `UV_NO_GROUP: doc` for the whole job (uv 0.9.8 or later). Passing `--no-group doc` to `uv sync` is not enough, because a later `uv run` syncs the default groups again and installs `doc`.
+A later plain `uv sync` removes the docs packages again; a plain `uv run` keeps them.
 
-```yaml
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    env:
-      UV_NO_GROUP: doc
-    steps:
-      ...
-      - run: uv sync
-      - run: uv run pytest
+The docs workflow and `make docs` ask for the group themselves, for example:
+
+```bash
+uv run --group doc quarto render docs
 ```
-
-The docs workflow and `make docs` need the docs packages, so leave `UV_NO_GROUP` unset there. `uv sync` and `uv run` then install them.
 
 If your project uses extras instead of dependency groups, make `doc` an extra and leave it out of `dev`:
 
