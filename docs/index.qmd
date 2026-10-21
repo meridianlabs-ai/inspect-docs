@@ -79,21 +79,15 @@ doc = [
 ]
 ```
 
-Keep `doc` out of `tool.uv.default-groups` too. Then `uv sync` and `uv run` leave the docs packages out, so CI jobs that don't build the docs need no extra settings.
+Keep `doc` out of `tool.uv.default-groups` too. Then plain `uv sync` and `uv run` never install the docs packages, in CI, in agent jobs or locally. CI needs no `UV_NO_GROUP` or `--no-group doc`. Don't add them: uv fails with an error in a project that has no `doc` group.
 
-Install the group when you work on the docs:
-
-```bash
-uv sync --group doc
-```
-
-A later plain `uv sync` removes the docs packages again; a plain `uv run` keeps them.
-
-The docs workflow and `make docs` ask for the group themselves, for example:
+Building or publishing the docs asks for the group explicitly, with `uv sync --group doc` or `uv run --group doc`:
 
 ```bash
 uv run --group doc quarto render docs
 ```
+
+Use the same flag with `quarto preview` and `quarto publish`, in the docs workflow, `make docs` and your contributor instructions. A later plain `uv sync` removes the docs packages again; a plain `uv run` keeps them.
 
 If your project uses extras instead of dependency groups, make `doc` an extra and leave it out of `dev`:
 
