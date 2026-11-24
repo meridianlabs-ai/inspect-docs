@@ -171,6 +171,9 @@ Options available under `inspect-docs:` in `_quarto.yml`:
 | `favicon`       | Site favicon (path or URL).                                                                   |
 | `url`           | Canonical site URL. Used when generating absolute links in `llms.txt`.                       |
 | `repo`          | GitHub repo as `org/repo`. Enables the navbar GitHub icon and source links on reference pages. |
+| `branch`        | Branch that per-page source links point at. Defaults to `main`.                              |
+| `repo-actions`  | Per-page repo links shown beneath the table of contents (requires `repo`). Defaults to `[source, issue]` ("View source", "Report an issue"); any of Quarto's [`repo-actions`](https://quarto.org/docs/websites/website-tools.html#edit-links) (`edit`, `source`, `issue`) may be listed, or `false` to disable. |
+| `last-modified` | Show a small "Last updated" date at the bottom of each page, taken from the last git commit touching the page's source or any file it includes. Defaults to `true`; set `false` to disable. Skipped for reference pages, pages that set `date-modified` themselves, and shallow clones (render from a full clone, e.g. `fetch-depth: 0` in CI). |
 | `org`           | Organization name. Adds a left-side footer link.                                             |
 | `org_url`       | Custom URL for the org footer link. Defaults to `https://github.com/{org}`.                  |
 | `twitter`       | Twitter/X handle (without `@`). Adds a Twitter icon to the footer right.                     |

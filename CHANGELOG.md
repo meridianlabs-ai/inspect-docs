@@ -1,3 +1,8 @@
+## 1.0.11 (24 November 2026)
+
+- When `repo` is set, pages now include "View source" and "Report an issue" links beneath the table of contents (Quarto `repo-actions`). Configure with `inspect-docs.repo-actions` (or `false` to disable) and `inspect-docs.branch` (default `main`). `repo-subdir` is detected from git, and links for symlinked sources (e.g. `CHANGELOG.md`) point at the real file.
+- Pages now end with a small "Last updated <date>" line, dated by the last git commit that touched the page's source or any file it includes via `{{< include >}}`. Disable with `inspect-docs.last-modified: false`. Skipped for generated reference pages, pages that set `date-modified` themselves, and shallow clones.
+
 ## 1.0.10 (02 June 2026)
 
 - `inspect-docs.sidebar` now accepts a dict of Quarto sidebar properties (e.g. `collapse-level`, `style`) that are merged onto the generated main sidebar. Set `collapse-level: 1` for quarto.org-style navigation where only the selected top-level section is expanded. The existing `false` and `"unified"` values are unchanged.
